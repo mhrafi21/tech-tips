@@ -1,28 +1,23 @@
 import mongoose, { Schema } from 'mongoose'
-import { TCar } from './car.interface'
+import { TPost } from './car.interface'
 
-const carSchema = new Schema<TCar>(
+
+const postSchema = new Schema<TPost>(
   {
-    name: { type: String, required: true },
+    images: [{ type: String }],
+    title: { type: String, required: true },
     description: { type: String, required: true },
-    color: { type: String, required: true },
-    isElectric: { type: Boolean, required: true },
-    image: {type: String, required: true},
-    category: {type: String, required: true},
-    reviews: {type: Number, required: true},
-    location: {type: String, required: true},
-    status: {
-      type: String,
-      enum: ['available', 'unavailable'],
-      default: 'available',
-    },
-    features: { type: [String], required: true },
-    pricePerHour: { type: Number, required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    category: { type: String },
+    slug: { type: String, required: true },
     isDeleted: { type: Boolean, required: true, default: false },
+    isFeatured: { type: Boolean, required: true, default: false },
+    views: { type: Number, required: true, default: 0 },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
   },
   { timestamps: true },
 )
 
-const carModel = mongoose.model<TCar>('Car', carSchema)
+const carModel = mongoose.model<TPost>('Car', postSchema)
 
 export const carModels = { carModel }

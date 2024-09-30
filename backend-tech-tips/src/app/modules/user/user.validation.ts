@@ -2,20 +2,18 @@ import { z } from 'zod'
 
 const userValidationSchema = z.object({
   body: z.object({
-    name: z.string({
-      invalid_type_error: 'Name must be string',
-    }),
-    email: z.string({
-      invalid_type_error: 'Email must be string',
-    }),
-    password: z.string({
-      invalid_type_error: 'Password must be string',
-    }),
-   confirmPassword: z.string({
-    invalid_type_error: "password must be string"
-   }),
+    _id: z.string().optional(),
+    id: z.string().optional(),
+    email: z.string().email(),
+    password: z.string(), // Assuming the password needs to be at least 8 characters
+    username: z.string(), // Username with minimum 3 characters
+    profileImage: z.string().url().optional(),
+    role: z.enum(["user", "admin"]),
+    followers: z.array(z.string()), // Assuming ObjectId is a 24-character string
+    following: z.array(z.string()), // Same assumption as above
+    isVerified: z.boolean().default(false),
     terms: z.boolean(),
-    role: z.enum(['user', 'admin']).optional(),
+    status: z.enum(["active", "blocked"])
   }),
 })
 

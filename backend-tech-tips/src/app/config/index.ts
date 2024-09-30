@@ -13,6 +13,8 @@ export default {
   PAYMENT_URL: process.env.PAYMENT_URL,
   STORE_ID: process.env.STORE_ID,
   SIGNATURE_KEY: process.env.SIGNATURE_KEY,
-  VERIFY_PAYMENT_URL: process.env.VERIFY_PAYMENT_URL
-
+  VERIFY_PAYMENT_URL: process.env.VERIFY_PAYMENT_URL,
+  API_KEY: process.env.API_KEY,
+  CLOUD_NAME: process.env.CLOUD_NAME,
+  API_SECRET: process.env.API_SECRET,
 }

@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose'
-import { TUser } from './user.interface'
+import { IUser } from './user.interface'
 
-const userSchema = new Schema<TUser>(
+
+const userSchema = new Schema<IUser>(
   {
-    name: { type: String, required: true },
+    username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    confirmPassword: { type: String, required: true },
     terms: { type: Boolean, required: true },
     role: {
       type: String,
@@ -15,11 +15,18 @@ const userSchema = new Schema<TUser>(
     },
     status: {
       type: String,
-      enum: ['active','blocked'],
+      enum: ['active', 'blocked'],
       default: 'active',
-    }
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    profileImage: {type: String},
+    followers: [{type: Schema.Types.ObjectId, ref: "User"}],
+    following: [{type: Schema.Types.ObjectId, ref: "User"}]
   },
   { timestamps: true },
 )
 
-export const User = model<TUser>('User', userSchema)
+export const User = model<IUser>('User', userSchema)

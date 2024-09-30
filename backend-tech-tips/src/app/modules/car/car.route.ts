@@ -11,9 +11,7 @@ import { auth } from '../Auth/auth'
 const router = express.Router()
 
 router.post(
-  '/',
-  // auth(USER_ROLE.ADMIN as TUserRole),
-  validateRequest(carValidation.carValidationSchema),
+  '/create-post',
   carController.createCar,
 )
 
@@ -32,14 +30,6 @@ router.put(
   auth(USER_ROLE.ADMIN as TUserRole),
   validateRequest(carValidation.updateCarValidationSchema),
   carController.updateCar,
-)
-
-
-
-router.delete(
-  '/:id',
-  auth(USER_ROLE.ADMIN as TUserRole),
-  carController.softDeleteCar,
 )
 
 export const carRoutes = router

@@ -1,35 +1,48 @@
 import jwt from 'jsonwebtoken'
 import httpStatus from 'http-status'
-import { TUser } from './user.interface'
+import { IUser } from './user.interface'
 import { User } from './user.model'
 import config from '../../config'
 import AppError from '../../errors/AppError'
+import bcrypt from "bcrypt"
 
-const createUserIntoDB = async (payload: TUser) => {
+const createUserIntoDB = async (payload: IUser) => {
   // create a user object
+  const { password: userPass, ...userInfo } = payload;
+
+  const password = await bcrypt.hash(userPass, 10);
 
   const isAlreadyRegister = await User.findOne({ email: payload?.email })
 
   if (!isAlreadyRegister) {
-    const result = await User.create(payload)
+    const result = await User.create({ password, ...userInfo })
     return result
   } else {
     throw new AppError(httpStatus.ALREADY_REPORTED, 'User is already register')
   }
 }
 
-const loginUserFromDB = async (payload: TUser) => {
-  const result = await User.findOne({
-    email: payload?.email,
-    password: payload?.password,
-  })
+const loginUserFromDB = async (payload: IUser) => {
+
+  const result = await User.findOne({ email: payload?.email });
+
+  if (!result) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid email')
+  }
+  const isPasswordValid = await bcrypt.compare(payload.password, result.password)
+
+  if (!isPasswordValid) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid password')
+  }
+
   // generate token for a login user
 
   const SignInToken = jwt.sign(
     {
       email: result?.email,
       role: result?.role,
-      name: result?.name,
+      name: result?.username,
+      isVerified: result?.isVerified,
     },
     config.JWT_SECRET as string,
     { expiresIn: '5d' },
@@ -48,7 +61,7 @@ const getAllUsersFromDB = async () => {
   return result
 }
 
-const updateStatusIntoDB = async (id: string, payload: TUser) => {
+const updateStatusIntoDB = async (id: string, payload: IUser) => {
   console.log(payload)
   const result = await User.findByIdAndUpdate(
     id,

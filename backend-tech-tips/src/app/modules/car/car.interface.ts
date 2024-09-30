@@ -1,3 +1,5 @@
+import { Schema, Types } from "mongoose"
+
 export type TCar = {
   name: string
   description: string
@@ -11,4 +13,15 @@ export type TCar = {
   features: string[]
   pricePerHour: number
   isDeleted: boolean
+}
+
+
+export type TPost = {
+  images: string[],
+  title: string,
+  description: string
+  user: Types.ObjectId,
+  category: string,
+  slug: string,
+
 }

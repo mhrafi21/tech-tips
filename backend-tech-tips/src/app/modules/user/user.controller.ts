@@ -2,13 +2,11 @@ import { createUserIntoDB, getAllUsersFromDB, loginUserFromDB, updateStatusIntoD
 import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 
-import { TUser } from './user.interface'
+import { IUser } from './user.interface'
 import httpStatus from 'http-status'
 
 const createUser = catchAsync(async (req, res) => {
-
-  const result = await createUserIntoDB(req.body as TUser)
-
+  const result = await createUserIntoDB({...req.body.data, profileImage: req.file?.path})
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
@@ -18,7 +16,7 @@ const createUser = catchAsync(async (req, res) => {
 })
 
 const loginUser = catchAsync(async (req, res) => {
-  const { result, token } = await loginUserFromDB(req.body as TUser)
+  const { result, token } = await loginUserFromDB(req.body as IUser)
 
 
   if (result === null) {
