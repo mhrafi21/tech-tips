@@ -17,6 +17,9 @@ router.get(
   '/',
   authUser(USER_ROLE.USER as TUserRole) || auth(USER_ROLE.ADMIN as TUserRole),
   createPostControllers.getPosts,
-)
+);
+
+router.get("/:id",authUser(USER_ROLE.USER as TUserRole), createPostControllers.getSingleUserPosts);
+
 
 export const postRoutes = router

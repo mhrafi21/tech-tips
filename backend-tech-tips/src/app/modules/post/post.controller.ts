@@ -32,7 +32,20 @@ const getPosts = catchAsync(async (req, res) => {
   })
 })
 
+// get user specific post 
+const getSingleUserPosts = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const posts = await postServices.getUserPostsFromDB(id as string)
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'User posts fetched successfully',
+    data: posts,
+  })
+})
+
 export const createPostControllers = {
   createPost,
   getPosts,
+  getSingleUserPosts
 }
