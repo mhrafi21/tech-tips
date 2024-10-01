@@ -1,15 +1,17 @@
 import { Router } from 'express'
 
-import { carRoutes } from '../modules/car/car.route'
 import { userRouter } from '../modules/user/user.route'
 import { paymentRoutes } from '../modules/payment/payment.route'
+import { postRoutes } from '../modules/post/post.route'
+import { followRoutes } from '../modules/follow/follow.route'
 
 const router = Router()
 
 const moduleRoutes = [
   { path: '/auth', route: userRouter },
-  { path: '/post', route: carRoutes },
-  {path: "/payment", route: paymentRoutes }
+  { path: '/payment', route: paymentRoutes },
+  { path: '/posts', route: postRoutes },
+  { path: "/user", route: followRoutes }
 ]
 
 moduleRoutes.forEach(route => router.use(route.path, route.route))

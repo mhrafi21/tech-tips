@@ -4,13 +4,13 @@ import { IUser } from './user.interface'
 import { User } from './user.model'
 import config from '../../config'
 import AppError from '../../errors/AppError'
-import bcrypt from "bcrypt"
+import bcrypt from 'bcrypt'
 
 const createUserIntoDB = async (payload: IUser) => {
   // create a user object
-  const { password: userPass, ...userInfo } = payload;
+  const { password: userPass, ...userInfo } = payload
 
-  const password = await bcrypt.hash(userPass, 10);
+  const password = await bcrypt.hash(userPass, 10)
 
   const isAlreadyRegister = await User.findOne({ email: payload?.email })
 
@@ -23,13 +23,15 @@ const createUserIntoDB = async (payload: IUser) => {
 }
 
 const loginUserFromDB = async (payload: IUser) => {
-
-  const result = await User.findOne({ email: payload?.email });
+  const result = await User.findOne({ email: payload?.email })
 
   if (!result) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid email')
   }
-  const isPasswordValid = await bcrypt.compare(payload.password, result.password)
+  const isPasswordValid = await bcrypt.compare(
+    payload.password,
+    result.password,
+  )
 
   if (!isPasswordValid) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid password')
@@ -39,6 +41,7 @@ const loginUserFromDB = async (payload: IUser) => {
 
   const SignInToken = jwt.sign(
     {
+      id: result?._id,
       email: result?.email,
       role: result?.role,
       name: result?.username,
@@ -61,8 +64,31 @@ const getAllUsersFromDB = async () => {
   return result
 }
 
+// update profile
+
+const updateProfileIntoDB = async (id: string, payload: IUser) => {
+  const result = await User.findByIdAndUpdate(
+    id,
+    {
+      email: payload?.email,
+      username: payload?.username,
+      profileImage: payload?.profileImage,
+    },
+    { new: true },
+  )
+  return result
+}
+
+// get singleProfile
+
+const getSingleProfileFromDB = async (id: string) => {
+  const result = await User.findById(id)
+    .populate('followers')
+    .populate('following')
+  return result
+}
+
 const updateStatusIntoDB = async (id: string, payload: IUser) => {
-  console.log(payload)
   const result = await User.findByIdAndUpdate(
     id,
     {
@@ -77,15 +103,13 @@ const updateStatusIntoDB = async (id: string, payload: IUser) => {
   return result
 }
 
-const updateUserProfileIntoDB = async (id: string, payload: string) => {
-  const result = await User.findOneAndUpdate({ email: id }, { name: payload })
-  return result;
-}
 
 export {
   createUserIntoDB,
   loginUserFromDB,
   getAllUsersFromDB,
   updateStatusIntoDB,
-  updateUserProfileIntoDB,
+  updateProfileIntoDB,
+  getSingleProfileFromDB,
+
 }

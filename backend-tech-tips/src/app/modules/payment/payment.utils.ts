@@ -19,16 +19,16 @@ const initiatePayment = async (customerInfo: TBPaymentProps) => {
     amount: customerInfo?.amount,
     tran_id: customerInfo.trx_id,
     currency: 'BDT',
-    success_url:`https://server-car-rental-reservation.vercel.app/api/payment/success?id=${customerInfo?.id}`,
-    fail_url: 'https://server-car-rental-reservation.vercel.app/api/payment/failed',
-    cancel_url: 'https://client-car-rental-reservation.vercel.app/dashboard/my-bookings',
+    success_url: `https://server-car-rental-reservation.vercel.app/api/payment/success?id=${customerInfo?.id}`,
+    fail_url:
+      'https://server-car-rental-reservation.vercel.app/api/payment/failed',
+    cancel_url:
+      'https://client-car-rental-reservation.vercel.app/dashboard/my-bookings',
     desc: 'Lend Money',
     type: 'json',
   })
 
   return res?.data
 }
-
-
 
 export default initiatePayment

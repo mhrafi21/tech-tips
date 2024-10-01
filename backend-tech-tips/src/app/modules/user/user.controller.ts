@@ -1,4 +1,11 @@
-import { createUserIntoDB, getAllUsersFromDB, loginUserFromDB, updateStatusIntoDB, updateUserProfileIntoDB } from './user.service'
+import {
+  createUserIntoDB,
+  getAllUsersFromDB,
+  getSingleProfileFromDB,
+  loginUserFromDB,
+  updateProfileIntoDB,
+  updateStatusIntoDB,
+} from './user.service'
 import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 
@@ -6,7 +13,11 @@ import { IUser } from './user.interface'
 import httpStatus from 'http-status'
 
 const createUser = catchAsync(async (req, res) => {
-  const result = await createUserIntoDB({...req.body.data, profileImage: req.file?.path})
+  const data = JSON.parse(req.body.data)
+  const result = await createUserIntoDB({
+    ...data,
+    profileImage: req.file?.path,
+  })
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
@@ -17,7 +28,6 @@ const createUser = catchAsync(async (req, res) => {
 
 const loginUser = catchAsync(async (req, res) => {
   const { result, token } = await loginUserFromDB(req.body as IUser)
-
 
   if (result === null) {
     return sendResponse(res, {
@@ -35,8 +45,8 @@ const loginUser = catchAsync(async (req, res) => {
   })
 })
 
-const getAllUser = catchAsync(async(req,res) => {
-  const result = await getAllUsersFromDB();
+const getAllUser = catchAsync(async (req, res) => {
+  const result = await getAllUsersFromDB()
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -45,10 +55,12 @@ const getAllUser = catchAsync(async(req,res) => {
   })
 })
 
-const updateRoleOrStatus = catchAsync(async(req,res) => {
-const payload = req.body
-  const result = await updateStatusIntoDB(req.params.id as string, payload);
-    sendResponse(res, {
+// get user profile with followers and following
+
+const updateRoleOrStatus = catchAsync(async (req, res) => {
+  const payload = req.body
+  const result = await updateStatusIntoDB(req.params.id as string, payload)
+  sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Status updated',
@@ -56,15 +68,29 @@ const payload = req.body
   })
 })
 
-const updateUserProfile = catchAsync(async(req,res) => {
-  const {id, name} = req.body;
-  console.log(id,name);
-  const result = await updateUserProfileIntoDB(id as string, name as string);
-
+const updateProfile = catchAsync(async (req, res) => {
+  const image = req.file?.path
+  const data = JSON.parse(req.body.data)
+  const result = await updateProfileIntoDB(
+    data.id as string,
+    { profileImage: image, ...data } as IUser,
+  )
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'User Profile updated',
+    data: result,
+  })
+})
+
+// getSingle profile
+
+const getSingleProfile = catchAsync(async (req, res) => {
+  const result = await getSingleProfileFromDB(req.params.id as string)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User Profile',
     data: result,
   })
 })
@@ -74,5 +100,6 @@ export const UserController = {
   loginUser,
   getAllUser,
   updateRoleOrStatus,
-  updateUserProfile
+  updateProfile,
+  getSingleProfile,
 }

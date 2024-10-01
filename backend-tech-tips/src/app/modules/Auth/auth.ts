@@ -57,7 +57,6 @@ export const auth = (...adminAuth: TUserRole[]) => {
 export const authUser = (...userAuth: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // if the token is send from the client
-
     const tokenWithBearer = req.headers.authorization
     const token = tokenWithBearer?.split(' ')[1]
 

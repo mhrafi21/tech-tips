@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { IUser } from './user.interface'
 
-
 const userSchema = new Schema<IUser>(
   {
     username: { type: String, required: true },
@@ -22,9 +21,9 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    profileImage: {type: String},
-    followers: [{type: Schema.Types.ObjectId, ref: "User"}],
-    following: [{type: Schema.Types.ObjectId, ref: "User"}]
+    profileImage: { type: String, default: 'false' },
+    followers: [{ type: Schema.Types.ObjectId, ref: 'Follow' }],
+    following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   { timestamps: true },
 )
