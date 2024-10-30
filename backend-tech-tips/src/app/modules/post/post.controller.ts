@@ -21,9 +21,43 @@ const createPost = catchAsync(async (req, res) => {
   })
 })
 
+
+// edit post 
+
+const editPost = catchAsync(async (req, res) => {
+
+  const { postId } = req.params;
+
+  const postImg = req.file?.path || 'No image'
+  const dataParse = req.body.data
+  console.log(dataParse);
+
+  const result = await postServices.editPostFromDB(postId as string, {
+    image: postImg,
+    ...dataParse,
+  } as TPost)
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: 'Post updated successfully',
+    data: result,
+  })
+})
+
+const deletePost = catchAsync(async(req,res) => {
+  const {postId} = req.params;
+  const result = await postServices.deletePostFromDB(postId as string);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: 'Post deleted successfully',
+    data: result,
+  })
+});
+
 // get post from db
 const getPosts = catchAsync(async (req, res) => {
-  const posts = await postServices.getPostFromDB()
+  const posts = await postServices.getPostFromDB(req.query as Record<string, undefined>)
   sendResponse(res, {
     success: true,
     statusCode: 200,
@@ -34,6 +68,7 @@ const getPosts = catchAsync(async (req, res) => {
 
 // get user specific post 
 const getSingleUserPosts = catchAsync(async (req, res) => {
+  // single data using user id ;
   const { id } = req.params
   const posts = await postServices.getUserPostsFromDB(id as string)
   sendResponse(res, {
@@ -47,5 +82,7 @@ const getSingleUserPosts = catchAsync(async (req, res) => {
 export const createPostControllers = {
   createPost,
   getPosts,
-  getSingleUserPosts
+  getSingleUserPosts,
+  editPost,
+  deletePost
 }

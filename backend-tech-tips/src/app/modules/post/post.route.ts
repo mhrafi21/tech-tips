@@ -19,7 +19,9 @@ router.get(
   createPostControllers.getPosts,
 );
 
-router.get("/:id",authUser(USER_ROLE.USER as TUserRole), createPostControllers.getSingleUserPosts);
+router.get("/:id", authUser(USER_ROLE.USER as TUserRole), createPostControllers.getSingleUserPosts);
+router.put("/:postId", authUser(USER_ROLE.USER as TUserRole), multerUpload.single('image'), createPostControllers.editPost);
+router.delete("/:postId", authUser(USER_ROLE.USER as TUserRole), multerUpload.single('image'), createPostControllers.deletePost);
 
 
 export const postRoutes = router
