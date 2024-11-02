@@ -4,7 +4,7 @@ import { multerUpload } from '../../config/multer.config'
 
 const router = express.Router()
 
-router.post('/signup', multerUpload.single('image'), UserController.createUser)
+router.post('/signup', UserController.createUser)
 router.post('/signin', UserController.loginUser)
 router.post(
   '/users/update-profile',

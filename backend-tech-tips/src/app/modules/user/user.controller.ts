@@ -13,11 +13,7 @@ import { IUser } from './user.interface'
 import httpStatus from 'http-status'
 
 const createUser = catchAsync(async (req, res) => {
-  const data = JSON.parse(req.body.data)
-  const result = await createUserIntoDB({
-    ...data,
-    profileImage: req.file?.path,
-  })
+  const result = await createUserIntoDB(req.body as IUser)
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
