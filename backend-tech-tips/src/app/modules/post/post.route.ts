@@ -15,7 +15,7 @@ router.post(
 )
 router.get(
   '/',
-  authUser(USER_ROLE.USER as TUserRole) || auth(USER_ROLE.ADMIN as TUserRole),
+  // authUser(USER_ROLE.USER as TUserRole) || auth(USER_ROLE.ADMIN as TUserRole),
   createPostControllers.getPosts,
 );
 

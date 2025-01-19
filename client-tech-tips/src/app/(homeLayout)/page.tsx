@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 
 type TTabs = {
@@ -7,7 +8,7 @@ type TTabs = {
 };
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<string>("Posts");
+  const [activeTab, setActiveTab] = useState<string>("Posts"); 
 
   const tabs: TTabs[] = [
     { name: "Posts", content: "Post for all users" },

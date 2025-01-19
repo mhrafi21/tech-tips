@@ -10,7 +10,6 @@ export async function middleware(req: NextRequest) {
 //   console.log("pathname", pathname); // /dashboard
 // console.log("url", req.url) // http://localhost:3000/dashboard
 
-
   const user = await getCurrentUser();
 
   if (!user?.email) {
@@ -23,7 +22,6 @@ export async function middleware(req: NextRequest) {
   return NextResponse.redirect(new URL(`/login`, req.url));
 
 }
-
 
 export const config = {
   matcher: ["/profile", "/dashboard"],
